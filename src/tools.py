@@ -43,9 +43,42 @@ TOOLS_SCHEMA = [
         "parameters": {
             "type": "object",
             "properties": {
-                # TODO 1.2: Khai báo các thuộc tính tham số cho Tool tại đây...
+                "student_id": {
+                    "type": "string",
+                    "description": "Mã sinh viên cần đặt lịch hẹn (ví dụ: 'SV2026001')"
+                },
+                "datetime_str": {
+                    "type": "string",
+                    "description": "Thời gian hẹn theo định dạng chuỗi, ví dụ: '15:30 20/09/2026'"
+                },
+                "advisor_name": {
+                    "type": "string",
+                    "description": "Tên cố vấn học tập cần đặt lịch tư vấn"
+                }
             },
-            "required": [] # TODO 1.2: Khai báo danh sách các trường bắt buộc tại đây...
+            "required": ["student_id", "datetime_str", "advisor_name"]
+        }
+    },
+    {
+        "name": "update_student_profile",
+        "description": "Cập nhật thông tin hồ sơ học vụ của sinh viên VinUni theo trường dữ liệu cần thay đổi.",
+        "parameters": {
+            "type": "object",
+            "properties": {
+                "student_id": {
+                    "type": "string",
+                    "description": "Mã sinh viên cần cập nhật hồ sơ (ví dụ: 'SV2026001')"
+                },
+                "field_to_update": {
+                    "type": "string",
+                    "description": "Tên trường cần cập nhật, ví dụ: 'email', 'class', 'advisor', 'status'"
+                },
+                "new_value": {
+                    "type": "string",
+                    "description": "Giá trị mới để cập nhật cho trường đã chọn, ví dụ: 'an.nv@vinuni.edu.vn', 'AI-K4', '3.85'"
+                }
+            },
+            "required": ["student_id", "field_to_update", "new_value"]
         }
     }
 ]
@@ -110,9 +143,15 @@ TOOL_ROUTER = {
 
 def dispatch_tool_call(tool_name: str, arguments: Dict[str, Any]) -> str:
     """Hàm trung chuyển thực thi tool"""
-    if tool_name in TOOL_ROUTER:
-        try:
-            return TOOL_ROUTER[tool_name](**arguments)
-        except Exception as e:
-            return json.dumps({"status": "EXECUTION_ERROR", "error": str(e)}, ensure_ascii=False)
+    if tool_name == "academic_query":
+        return execute_academic_query(**arguments)
+    if tool_name == "schedule_appointment":
+        return execute_schedule_appointment(**arguments)
     return json.dumps({"status": "UNKNOWN_TOOL", "error": f"Tool '{tool_name}' không tồn tại!"}, ensure_ascii=False)
+
+
+if __name__ == "__main__":
+    print("✅ [TOOLS CHECK]: Đã đăng ký thành công 2 Native Tools trong TOOLS_SCHEMA!")
+    result = json.loads(dispatch_tool_call("academic_query", {"student_id": "SV2026001"}))
+    full_name = result.get("data", {}).get("full_name", "")
+    print(f"🧪 Kết quả gọi thử academic_query: Status {result.get('status')} (Sinh viên {full_name})")

@@ -1,0 +1,37 @@
+[
+  {
+    "id": "TC01",
+    "type": "direct_query",
+    "question": "Chào bạn, bạn có thể giới thiệu quy chế học vụ cơ bản của Đại học VinUni không?",
+    "expected_behavior": "Chatbot trả lời trực tiếp từ System Prompt, không cần gọi bất kỳ Tool nào.",
+    "complexity": "Low"
+  },
+  {
+    "id": "TC02",
+    "type": "single_tool_query",
+    "question": "Hãy tra cứu thông tin học vụ của sinh viên SV2026001.",
+    "expected_behavior": "Agent nhận diện nhu cầu tra cứu, tự động phát sinh Tool Call 'academic_query' với mã SV2026001.",
+    "complexity": "Medium"
+  },
+  {
+    "id": "TC03",
+    "type": "appointment_booking",
+    "question": "Sinh viên SV2026001 muốn đặt lịch tư vấn học vụ với cố vấn Nguyễn Thị Hạnh vào ngày 20/09/2026 lúc 15:30. Bạn có thể giúp đặt lịch cho em không?",
+    "expected_behavior": "Agent tự động phát sinh Tool Call 'schedule_appointment' với đúng thời gian, thông tin sinh viên và tên cố vấn.",
+    "complexity": "Medium"
+  },
+  {
+    "id": "TC04",
+    "type": "multi_step_reasoning",
+    "question": "Sinh viên SV2026001 muốn gặp cố vấn học vụ để hỏi về kế hoạch học tập và điểm GPA. Hãy tra cứu thông tin sinh viên trước, sau đó đặt lịch tư vấn với cố vấn phù hợp trong tuần tới.",
+    "expected_behavior": "Agent thực hiện chuỗi suy luận ReAct: truy vấn hồ sơ sinh viên, xác định nhu cầu tư vấn, sau đó gọi Tool 'schedule_appointment' để đặt lịch hẹn với cố vấn phù hợp.",
+    "complexity": "High"
+  },
+  {
+    "id": "TC05",
+    "type": "edge_case_handling",
+    "question": "Hãy tra cứu thông tin học vụ của sinh viên SV9999999 và cho biết nếu em ấy không tồn tại thì tôi nên làm gì.",
+    "expected_behavior": "Agent nhận kết quả NOT_FOUND từ Tool, báo rõ mã sinh viên không tồn tại và đưa ra phản hồi lịch sự, không bịa thông tin hoặc giả định sai dữ liệu.",
+    "complexity": "Medium"
+  }
+]
